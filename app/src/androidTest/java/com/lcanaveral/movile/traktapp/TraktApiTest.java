@@ -1,9 +1,7 @@
 package com.lcanaveral.movile.traktapp;
 
-import android.test.suitebuilder.annotation.SmallTest;
-
 import com.lcanaveral.movile.traktapp.api.Api;
-import com.lcanaveral.movile.traktapp.api.payload.Show;
+import com.lcanaveral.movile.traktapp.api.payloads.ShowPayload;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.*;
@@ -32,7 +30,7 @@ public class TraktApiTest {
 
     @Test
     private void trackApi_getPopularShows(){
-        List<Show> shows = Api.getTrakt().getPopularShows();
+        List<ShowPayload> shows = Api.getTrakt().getPopularShows();
         assertThat(shows.isEmpty(),is(true));
     }
 }

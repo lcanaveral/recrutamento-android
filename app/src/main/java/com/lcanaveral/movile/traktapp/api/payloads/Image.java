@@ -1,4 +1,4 @@
-package com.lcanaveral.movile.traktapp.api.payload;
+package com.lcanaveral.movile.traktapp.api.payloads;
 
 /**
  * Created by lcanaveral on 7/29/16.
