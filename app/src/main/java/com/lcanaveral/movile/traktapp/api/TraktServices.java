@@ -1,8 +1,9 @@
 package com.lcanaveral.movile.traktapp.api;
 
 import com.lcanaveral.movile.traktapp.BuildConfig;
-import com.lcanaveral.movile.traktapp.api.payload.Season;
-import com.lcanaveral.movile.traktapp.api.payload.Show;
+import com.lcanaveral.movile.traktapp.api.payloads.RatingPayload;
+import com.lcanaveral.movile.traktapp.api.payloads.SeasonPayload;
+import com.lcanaveral.movile.traktapp.api.payloads.ShowPayload;
 
 import java.util.ArrayList;
 
@@ -23,7 +24,7 @@ public interface TraktServices {
             "trakt-api-key:"+ BuildConfig.TRAKT_CLIENT_ID
     })
     @GET("/shows/popular?extended=images")
-    void getPopularShowsWithCallback(Callback<ArrayList<Show>> response);
+    void getPopularShowsWithCallback(Callback<ArrayList<ShowPayload>> response);
 
 
     @Headers({
@@ -32,7 +33,7 @@ public interface TraktServices {
             "trakt-api-key:"+ BuildConfig.TRAKT_CLIENT_ID
     })
     @GET("/shows/popular?extended=images")
-    ArrayList<Show> getPopularShows();
+    ArrayList<ShowPayload> getPopularShows();
 
     @Headers({
             "Content-Type: application/json",
@@ -40,5 +41,14 @@ public interface TraktServices {
             "trakt-api-key:"+ BuildConfig.TRAKT_CLIENT_ID
     })
     @GET("/shows/{slug}/seasons?extended=episodes")
-    ArrayList<Season> getSeasons(@Path("slug") String slug);
+    ArrayList<SeasonPayload> getSeasons(@Path("slug") String slug);
+
+
+    @Headers({
+            "Content-Type: application/json",
+            "trakt-api-version:2",
+            "trakt-api-key:"+ BuildConfig.TRAKT_CLIENT_ID
+    })
+    @GET("/shows/{slug}/ratings")
+    RatingPayload getRating(@Path("slug") String slug);
 }
