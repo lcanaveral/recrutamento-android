@@ -1,24 +1,24 @@
-package com.lcanaveral.movile.traktapp.ui.shows;
+package com.lcanaveral.movile.traktapp.ui.seasons;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
+import com.lcanaveral.movile.traktapp.ui.shows.Show;
+
 import java.util.List;
 
 /**
- * Created by lcanaveral on 7/29/16.
+ * Created by lcanaveral on 7/30/16.
  */
-public class ShowAdapter extends RecyclerView.Adapter<ShowAdapter.InternalViewHolder>{
-
+public class SeasonAdapter extends RecyclerView.Adapter<SeasonAdapter.InternalViewHolder> {
     private Context context;
 
-    private List<Show> shows;
+    private List<Season> seasons;
 
-    public ShowAdapter(Context context,List<Show> shows){
-
+    public SeasonAdapter(Context context,List<Season> shows){
         this.context = context;
-        this.shows = shows;
+        this.seasons = shows;
     }
 
     @Override
@@ -28,22 +28,21 @@ public class ShowAdapter extends RecyclerView.Adapter<ShowAdapter.InternalViewHo
 
     @Override
     public void onBindViewHolder(InternalViewHolder holder, int position) {
-        holder.bind(this.shows.get(position));
+        holder.bind(this.seasons.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return shows.size();
+        return seasons.size();
     }
 
 
     public class InternalViewHolder extends RecyclerView.ViewHolder {
         public InternalViewHolder() {
-            super(ShowViewHolder_.build(context));
+            super(SeasonViewHolder_.build(context));
         }
-
-        public void bind(Show show) {
-            ((ShowViewHolder) this.itemView).bind(show);
+        public void bind(Season season) {
+            ((SeasonViewHolder) this.itemView).bind(season);
         }
     }
 

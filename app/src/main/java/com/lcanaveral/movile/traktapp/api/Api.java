@@ -23,7 +23,7 @@ public class Api {
                 .build();
 
         if(BuildConfig.TRAKT_RETROFIT_DEBUG) {
-            retrofit.setLogLevel(RestAdapter.LogLevel.FULL);
+            //retrofit.setLogLevel(RestAdapter.LogLevel.FULL);
         }
 
         services = retrofit.create(TraktServices.class);

@@ -32,13 +32,9 @@ public class ShowsActivity extends AppCompatActivity {
 
     private ProgressDialog loading;
 
+    private static final String LOG_TAG = ShowsActivity.class.getSimpleName();
 
-    private static final String LOG_TAG = "Shows";
-
-    @ViewById
-    protected RecyclerView shows;
-
-
+    @ViewById protected RecyclerView shows;
 
     @AfterViews
     protected void AfterViews() {
@@ -64,14 +60,8 @@ public class ShowsActivity extends AppCompatActivity {
                 Log.i(LOG_TAG, "onItemClicked");
 
                 ShowViewHolder holder = (ShowViewHolder) v;
-
-                //ShowsActivity_.intent(getApplicationContext()).start();
-
                 Intent intent = ShowActivity_.intent(getApplicationContext()).get();
-
-                intent.putExtra("REFERENCE_TITLE", holder.getReference().title);
                 intent.putExtra("SHOW", holder.getReference());
-
                 startActivityForResult(intent,1);
             }
         });

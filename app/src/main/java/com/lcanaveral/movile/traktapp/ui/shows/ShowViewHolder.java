@@ -14,16 +14,14 @@ import org.androidannotations.annotations.ViewById;
 /**
  * Created by lcanaveral on 7/29/16.
  */
-@EViewGroup(R.layout.show_item)
+@EViewGroup(R.layout.item_show)
 public class ShowViewHolder extends LinearLayout{
-    @ViewById
-    protected TextView title;
-    @ViewById
-    protected ImageView poster;
+    @ViewById protected TextView title;
+    @ViewById protected ImageView poster;
 
-    private boolean isImageLoaded = false;
+    private boolean mSsImageLoaded = false;
 
-    private Show reference;
+    private Show mReference;
 
 
     public ShowViewHolder(Context context) {
@@ -31,19 +29,19 @@ public class ShowViewHolder extends LinearLayout{
     }
 
     public void bind(Show show){
-        reference = show;
+        mReference = show;
 
         title.setText(show.title);
 
-        if(!isImageLoaded) {
+        if(!mSsImageLoaded) {
             final ImageView reference = poster;
             new DownloadImageTask(reference).execute(show.poster);
-            isImageLoaded = true;
+            mSsImageLoaded = true;
         }
 
     }
 
     public Show getReference() {
-        return reference;
+        return mReference;
     }
 }
