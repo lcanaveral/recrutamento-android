@@ -32,7 +32,7 @@ public class SeasonViewHolder extends LinearLayout {
 
     public void bind(Season season){
 
-        title.setText("Season " + season.number +1);
+        title.setText("Season " + (season.number +1));
 
 
         this.episodes.setAdapter(new EpisodeAdapter(context, season.episodes));
