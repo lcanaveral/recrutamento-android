@@ -18,8 +18,10 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleGravity="right"
             app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Title"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -28,24 +30,11 @@
                 android:background="@drawable/activity_show_bg_color"
                 app:layout_collapseMode="parallax">
 
-
                 <ImageView
                     android:id="@+id/header"
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
                     android:scaleType="centerCrop" />
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/serie_main_image"
-                    android:layout_width="@dimen/logo_width"
-                    android:layout_height="@dimen/logo_width"
-
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/logo_margin_top"
-                    app:civ_border_color="@android:color/holo_orange_dark"
-                    app:civ_border_width="3dp" />
-
-
             </RelativeLayout>
 
 
@@ -66,7 +55,7 @@
 
 
         android:layout_height="225dp"
-
+        android:layout_marginLeft="16dp"
 
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|left|end"
@@ -75,77 +64,74 @@
         />
 
 
-    <RelativeLayout
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:fitsSystemWindows="false"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        >
 
-        <LinearLayout
+
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content">
 
-            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:id="@+id/sub_header">
 
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:id="@+id/frameLayout"
-                android:layout_gravity="right"
-                android:layout_marginRight="20dp">
-
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:src="@drawable/season_rating" />
-
-                <TextView
-                    android:id="@+id/rating"
+                <FrameLayout
+                    android:id="@+id/frameLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/default_rating"
-                    android:textColor="@android:color/white"
-                    android:textSize="25sp" />
-            </FrameLayout>
+                    android:layout_gravity="right"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="20dp">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:lineSpacingExtra="8dp"
-                android:padding="@dimen/activity_horizontal_margin"
-                android:text="Episodes"
-                android:textSize="20sp"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:src="@drawable/season_rating" />
 
+                    <TextView
+                        android:id="@+id/rating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/default_rating"
+                        android:textColor="@android:color/white"
+                        android:textSize="25sp" />
+                </FrameLayout>
 
-            <!--
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/episodes"
-                android:scrollbars="none"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
-            -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:lineSpacingExtra="8dp"
+                    android:padding="@dimen/activity_horizontal_margin"
+                    android:text="@string/episodes"
+                    android:textSize="20sp"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/seasons"
-                android:scrollbars="none"
-                android:layout_width="fill_parent"
-                android:background="@drawable/border"
-                android:layout_height="wrap_content"
-                />
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/seasons"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
 
-
-
-        </LinearLayout>
-
-
-    </RelativeLayout>
-
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    android:minHeight="100dp"
+                 />
 
 
+            </LinearLayout>
 
+        </RelativeLayout>
+
+    </android.support.v4.widget.NestedScrollView>
 
 
 </android.support.design.widget.CoordinatorLayout>

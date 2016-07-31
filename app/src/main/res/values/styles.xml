@@ -24,4 +24,11 @@
         <item name="colorPrimary">@android:color/transparent</item>
     </style>
 
+    <style name="CustomExpandedTextTytleStyle" parent="Base.TextAppearance.AppCompat.Title">
+        <item name="android:textSize">@dimen/abc_text_size_title_material</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:alpha">0</item>
+
+    </style>
+
 </resources>
