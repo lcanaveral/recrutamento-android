@@ -2,5 +2,6 @@
     <string name="app_name">Trakt App</string>
 
     <string name="default_rating">0</string>
+    <string name="episodes">Episodes</string>
 
 </resources>

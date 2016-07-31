@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ import com.lcanaveral.movile.traktapp.api.payloads.ShowPayload;
 import com.lcanaveral.movile.traktapp.ui.episodes.Episode;
 import com.lcanaveral.movile.traktapp.ui.episodes.EpisodeAdapter;
 import com.lcanaveral.movile.traktapp.ui.layout.CustomLinearLayoutManager;
+import com.lcanaveral.movile.traktapp.ui.layout.ExpansiveLayoutManager;
 import com.lcanaveral.movile.traktapp.ui.seasons.Season;
 import com.lcanaveral.movile.traktapp.ui.seasons.SeasonAdapter;
 import com.lcanaveral.movile.traktapp.ui.shows.Show;
@@ -32,6 +34,7 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 @EActivity(R.layout.activity_show)
 public class ShowActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
@@ -49,6 +52,7 @@ public class ShowActivity extends AppCompatActivity implements AppBarLayout.OnOf
     //@ViewById protected RecyclerView episodes;
 
     @AfterViews
+    @UiThread
     void init() {
 
         Bundle extras = getIntent().getExtras();
@@ -81,7 +85,7 @@ public class ShowActivity extends AppCompatActivity implements AppBarLayout.OnOf
         appbar.addOnOffsetChangedListener(this);
 
 
-        //fetchRaiting();
+        fetchRaiting();
         fetchSeasons();
 
     }
@@ -93,8 +97,10 @@ public class ShowActivity extends AppCompatActivity implements AppBarLayout.OnOf
 
 
         this.seasons.setAdapter(new SeasonAdapter(getApplicationContext(), seasons));
-        this.seasons.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        this.seasons.setLayoutManager(new ExpansiveLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
+
+        //seasons.get(new SlideInUpAnimator());
 
 
         //this.episodes.setAdapter(new EpisodeAdapter(getApplicationContext(), seasons.get(0).episodes));
@@ -146,10 +152,13 @@ public class ShowActivity extends AppCompatActivity implements AppBarLayout.OnOf
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         int maxScroll = appBarLayout.getTotalScrollRange();
         float percentage = (float) Math.abs(verticalOffset) / (float) maxScroll;
-
         float fixedPercentage = 1 - percentage;
 
         poster.setAlpha(fixedPercentage);
+
+        if(percentage == 1){
+            //rating.getParent().setVisibility(View.INVISIBLE);
+        }
         //poster.getLayoutParams().width = (int)((150)*(fixedPercentage));
         //poster.getLayoutParams().height = (int)((225)*(fixedPercentage));
 

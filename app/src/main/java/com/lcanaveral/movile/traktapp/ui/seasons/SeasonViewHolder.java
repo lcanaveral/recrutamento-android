@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.lcanaveral.movile.traktapp.R;
 import com.lcanaveral.movile.traktapp.ui.episodes.EpisodeAdapter;
 import com.lcanaveral.movile.traktapp.ui.layout.CustomLinearLayoutManager;
+import com.lcanaveral.movile.traktapp.ui.layout.ExpansiveLayoutManager;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
@@ -30,12 +31,12 @@ public class SeasonViewHolder extends LinearLayout {
     }
 
     public void bind(Season season){
-        Log.d("--SeasonViewHolder.bind", ""+season.number);
 
-        title.setText("Season " + season.number);
+        title.setText("Season " + (season.number +1));
+
 
         this.episodes.setAdapter(new EpisodeAdapter(context, season.episodes));
-        this.episodes.setLayoutManager(new CustomLinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        this.episodes.setLayoutManager(new ExpansiveLayoutManager(context, LinearLayoutManager.VERTICAL, false));
 
     }
 }

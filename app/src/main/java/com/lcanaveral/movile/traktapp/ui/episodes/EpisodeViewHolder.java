@@ -25,6 +25,7 @@ public class EpisodeViewHolder extends LinearLayout {
     }
 
     public void bind(Episode episode){
+        setNestedScrollingEnabled(false);
         title.setText(episode.title);
         number.setText("E"+episode.number);
     }
