@@ -15,8 +15,7 @@ android {
 
         buildConfigField "Boolean", "TRAKT_RETROFIT_DEBUG", "true"
         buildConfigField "String", "TRAKT_END_POINT", "\"https://api-v2launch.trakt.tv/\""
-        //buildConfigField "String", "TRAKT_CLIENT_ID", "\"b07ebbf5102e15452a127c1e14b094a77060f326d654d3c08ad2df87e2085699\""
-        buildConfigField "String", "TRAKT_CLIENT_ID", "\"f3b24915066afd73102da32a89cc8f335da522969263c2b14c52457f1ea02e90\""
+        buildConfigField "String", "TRAKT_CLIENT_ID", "\"b07ebbf5102e15452a127c1e14b094a77060f326d654d3c08ad2df87e2085699\""
 
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }

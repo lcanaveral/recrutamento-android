@@ -3,6 +3,7 @@ package com.lcanaveral.movile.traktapp;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.UiThread;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +20,7 @@ import com.lcanaveral.movile.traktapp.ui.shows.ShowViewHolder;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.WindowFeature;
@@ -30,27 +32,24 @@ import java.util.List;
 @WindowFeature(Window.FEATURE_NO_TITLE)
 public class ShowsActivity extends AppCompatActivity {
 
-    private ProgressDialog loading;
 
     private static final String LOG_TAG = ShowsActivity.class.getSimpleName();
 
     @ViewById protected RecyclerView shows;
+    @Bean protected Api mApi;
+
+    private ProgressDialog mloadingDialog;
 
     @AfterViews
-    protected void AfterViews() {
-        Log.i(LOG_TAG, "afterViews");
-
-        loading = ProgressDialog.show(this, "Loading", "Please wait...", false, false);
-
-        fetchShows();
+    protected void init() {
+        showLoading();
+        fetch();
     }
 
     @UiThread
-    protected void onShowsFeched(List<Show> shows){
-        Log.i(LOG_TAG, "onShowsFeched");
-        if(loading != null){
-            loading.dismiss();
-        }
+    protected void updateView(List<Show> shows){
+
+
         this.shows.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         this.shows.setAdapter(new ShowAdapter(getApplicationContext(), shows));
 
@@ -65,28 +64,44 @@ public class ShowsActivity extends AppCompatActivity {
                 startActivityForResult(intent,1);
             }
         });
+
+        closeLoading();
     }
 
 
 
     @Background
-    protected void fetchShows(){
+    protected void fetch(){
         Log.i(LOG_TAG, "fetchShows");
 
-        List<ShowPayload> _shows = Api.getTrakt().getPopularShows();
-        final List<Show> shows = new ArrayList<Show>();
-
-        for(ShowPayload showPaiload: _shows){
-            shows.add(new Show(showPaiload));
-        }
+        final List<Show> shows = mApi.getPopularShows();
 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                onShowsFeched(shows);
+                updateView(shows);
             }
         });
 
+    }
+
+    private void showLoading() {
+        mloadingDialog = new ProgressDialog(this, DialogFragment.STYLE_NO_INPUT);
+        mloadingDialog.setTitle(R.string.loading);
+        mloadingDialog.setCancelable(false);
+        mloadingDialog.setIndeterminate(true);
+        mloadingDialog.show();
+    }
+
+    private void closeLoading(){
+        try {
+            if (mloadingDialog != null && mloadingDialog.isShowing()){
+                mloadingDialog.dismiss();
+            }
+        } catch (Exception anyExceptionIgnored) {
+        } finally {
+            mloadingDialog = null;
+        }
     }
 
 
