@@ -62,7 +62,7 @@ public class ShowActivity extends AppCompatActivity implements AppBarLayout.OnOf
 
         mShow = new Show();
         mShow.poster = "https://walter.trakt.us/images/shows/000/001/390/posters/thumb/93df9cd612.jpg";
-        mShow.logo = "https://walter.trakt.us/images/shows/000/001/390/logos/original/13b614ad43.png";
+        mShow.logo = "https://walter.trakt.us/images/shows/000/001/390/fanarts/thumb/76d5df8aed.jpg";
         mShow.slug = "game-of-thrones";
         mShow.title = "Game Of Thrones";
 
@@ -82,13 +82,8 @@ public class ShowActivity extends AppCompatActivity implements AppBarLayout.OnOf
         AppBarLayout appbar = (AppBarLayout) findViewById(R.id.app_bar);
         appbar.addOnOffsetChangedListener(this);
 
-
-        //fetchRaiting();
         showLoading();
         fetch();
-
-
-
 
     }
 
