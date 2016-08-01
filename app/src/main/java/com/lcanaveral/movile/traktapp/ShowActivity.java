@@ -1,38 +1,38 @@
 package com.lcanaveral.movile.traktapp;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.UiThread;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
+import android.view.KeyEvent;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lcanaveral.movile.traktapp.api.Api;
-import com.lcanaveral.movile.traktapp.api.payloads.EpisodePayload;
+import com.lcanaveral.movile.traktapp.api.exceptions.NoNetworkException;
 import com.lcanaveral.movile.traktapp.api.payloads.RatingPayload;
-import com.lcanaveral.movile.traktapp.api.payloads.SeasonPayload;
-import com.lcanaveral.movile.traktapp.api.payloads.ShowPayload;
-import com.lcanaveral.movile.traktapp.ui.episodes.Episode;
-import com.lcanaveral.movile.traktapp.ui.episodes.EpisodeAdapter;
-import com.lcanaveral.movile.traktapp.ui.layout.CustomLinearLayoutManager;
 import com.lcanaveral.movile.traktapp.ui.layout.ExpansiveLayoutManager;
 import com.lcanaveral.movile.traktapp.ui.seasons.Season;
 import com.lcanaveral.movile.traktapp.ui.seasons.SeasonAdapter;
 import com.lcanaveral.movile.traktapp.ui.shows.Show;
-import com.lcanaveral.movile.traktapp.ui.shows.ShowAdapter;
 import com.lcanaveral.movile.traktapp.utils.DownloadImageTask;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
-import java.util.ArrayList;
+import java.net.UnknownHostException;
 import java.util.List;
 
 
@@ -49,28 +49,26 @@ public class ShowActivity extends AppCompatActivity implements AppBarLayout.OnOf
     @ViewById protected ImageView poster;
     @ViewById protected TextView rating;
     @ViewById protected RecyclerView seasons;
+    @Bean protected Api mApi;
+
+    private ProgressDialog mloadingDialog;
+
     //@ViewById protected RecyclerView episodes;
 
     @AfterViews
-    @UiThread
-    void init() {
+    protected void init() {
 
         Bundle extras = getIntent().getExtras();
 
         mShow = new Show();
         mShow.poster = "https://walter.trakt.us/images/shows/000/001/390/posters/thumb/93df9cd612.jpg";
-        mShow.logo = "https://walter.trakt.us/images/shows/000/001/390/posters/thumb/93df9cd612.jpg";
+        mShow.logo = "https://walter.trakt.us/images/shows/000/001/390/logos/original/13b614ad43.png";
         mShow.slug = "game-of-thrones";
-        mShow.title = "game of thrones";
+        mShow.title = "Game Of Thrones";
 
         if (extras != null) {
-            String value = extras.getString("REFERENCE_TITLE");
             mShow = extras.getParcelable("SHOW");
         }
-
-        new DownloadImageTask(header).execute(mShow.logo);
-        new DownloadImageTask(poster).execute(mShow.poster);
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -85,13 +83,36 @@ public class ShowActivity extends AppCompatActivity implements AppBarLayout.OnOf
         appbar.addOnOffsetChangedListener(this);
 
 
-        fetchRaiting();
-        fetchSeasons();
+        //fetchRaiting();
+        showLoading();
+        fetch();
+
+
+
+
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return super.onKeyDown(keyCode,event);
+    }
+
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        //startActivity(new Intent(ThisActivity.this, NextActivity.class));
+        Intent intent = ShowsActivity_.intent(getApplicationContext()).get();
+        startActivity(intent);
+        finish();
 
     }
 
     @UiThread
-    protected void onEpisodesFeched(List<Season> seasons) {
+    protected void updateView(List<Season> seasons, double rating) {
+
         Log.d(LOG_TAG, "onEpisodesFeched " + seasons.size());
 
 
@@ -99,54 +120,46 @@ public class ShowActivity extends AppCompatActivity implements AppBarLayout.OnOf
         this.seasons.setAdapter(new SeasonAdapter(getApplicationContext(), seasons));
         this.seasons.setLayoutManager(new ExpansiveLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
+        this.rating.setText("" + String.valueOf(rating).substring(0, 3));
 
-        //seasons.get(new SlideInUpAnimator());
-
-
-        //this.episodes.setAdapter(new EpisodeAdapter(getApplicationContext(), seasons.get(0).episodes));
-        //this.episodes.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-
-
+        closeLoading();
     }
 
     @Background
-    protected void fetchSeasons() {
-        List<SeasonPayload> _seasons = Api.getTrakt().getSeasons(mShow.slug);
+    protected void fetch() {
 
-        final List<Episode> episodes = new ArrayList<Episode>();
-        final List<Season> seasons = new ArrayList<Season>();
+        final List<Season> seasons ;
+        final RatingPayload rating;
+        try {
+            seasons = mApi.getSeasons(mShow.slug);
+            rating = mApi.getRating(mShow.slug);
 
-        for (SeasonPayload _s : _seasons) {
-            Season s = new Season();
-            s.number = _s.number;
-            s.episodes = new ArrayList<Episode>();
-            for (EpisodePayload episode : _s.episodes) {
-                s.episodes.add(new Episode(episode));
-            }
-            seasons.add(s);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    updateView(
+                            seasons,
+                            rating.rating
+                    );
+                }
+            });
+
+            new DownloadImageTask(header).execute(mShow.logo);
+            new DownloadImageTask(poster).execute(mShow.poster);
+
+        } catch (final Exception e){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    showError(e.getMessage());
+                }
+            });
+
         }
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                onEpisodesFeched(seasons);
-            }
-        });
 
     }
 
-    @Background
-    protected void fetchRaiting() {
-        final RatingPayload _rating = Api.getTrakt().getRating(mShow.slug);
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                rating.setText("" + String.valueOf(_rating.rating).substring(0, 3));
-            }
-        });
-
-    }
 
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
@@ -164,4 +177,46 @@ public class ShowActivity extends AppCompatActivity implements AppBarLayout.OnOf
 
         //Log.i(LOG_TAG, "" +poster.getLayoutParams().width + " " + fixedPercentage);
     }
+
+    private void showLoading() {
+        mloadingDialog = new ProgressDialog(this,DialogFragment.STYLE_NO_INPUT);
+        mloadingDialog.setTitle(R.string.loading);
+        mloadingDialog.setCancelable(false);
+        mloadingDialog.setIndeterminate(true);
+        mloadingDialog.show();
+    }
+
+    private void closeLoading(){
+        try {
+            if (mloadingDialog != null && mloadingDialog.isShowing()){
+                mloadingDialog.dismiss();
+            }
+        } catch (Exception anyExceptionIgnored) {
+        } finally {
+            mloadingDialog = null;
+        }
+    }
+
+    private void showError(String message) {
+        closeLoading();
+        new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.episode_error_title))
+                .setMessage(message)
+                .setPositiveButton(getString(R.string.try_again_message), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        init();
+                    }
+                })
+                .setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .setCancelable(false)
+                .show();
+    }
+
+
 }

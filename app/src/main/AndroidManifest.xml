@@ -3,6 +3,7 @@
     package="com.lcanaveral.movile.traktapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -10,16 +11,29 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.ActionBar.Transparent">
-        <activity android:name=".ShowsActivity_">
+
+        <receiver android:name=".services.NetworkReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"></action>
+            </intent-filter>
+        </receiver>
+
+
+        <activity android:name=".ShowsActivity_" >
 
         </activity>
-        <activity android:name=".ShowActivity_"
+        <activity
+
+            android:name=".ShowActivity_"
+
             android:parentActivityName=".ShowsActivity_"
             >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
     </application>
 

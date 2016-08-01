@@ -12,16 +12,19 @@ import java.io.InputStream;
  * Created by lcanaveral on 7/29/16.
  */
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-    ImageView bmpImage;
 
-    private static final String LOG_TAG = "DownloadImageTask";
+    private static final String LOG_TAG = DownloadImageTask.class.getSimpleName();
+
+    private ImageView bmpImage;
+    private String urldisplay;
+
 
     public DownloadImageTask(ImageView bmImage) {
         this.bmpImage = bmImage;
     }
 
     protected Bitmap doInBackground(String... urls) {
-        String urldisplay = urls[0];
+        urldisplay = urls[0];
         Bitmap bitmap = null;
         Log.i(LOG_TAG, "doInBackground " + urldisplay);
         try {
@@ -35,7 +38,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     }
 
     protected void onPostExecute(Bitmap result) {
-        Log.i(LOG_TAG, "onPostExecute");
+        Log.i(LOG_TAG, "onPostExecute " + urldisplay);
         bmpImage.setImageBitmap(result);
     }
 
