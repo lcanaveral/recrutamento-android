@@ -1,7 +1,8 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
 
-    <dimen name="header_height">225dp</dimen>
+    <dimen name="header_height">250dp</dimen>
+    <dimen name="header_height_landscape">150dp</dimen>
     <dimen name="logo_height">80dp</dimen>
     <dimen name="logo_width">80dp</dimen>
     <dimen name="logo_margin_top">30dp</dimen>

@@ -20,7 +20,7 @@
     </style>
 
     <style name="AppTheme.ActionBar" parent="AppTheme">
-        <item name="windowActionBarOverlay">false</item>
+        <item name="windowActionBarOverlay">true</item>
         <item name="colorPrimary">@android:color/transparent</item>
     </style>
 
